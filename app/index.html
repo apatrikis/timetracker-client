@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="tt" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="tt" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="tt" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="tt" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <!-- base href="/timetracker-client/" -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Time Tracker</title>
+        <meta name="description" content="Caputre and mange your time in a new way">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
+        <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+        <link rel="stylesheet" href="app.css">
+        <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <a href="#/"><img src="res/TimeTracker.PNG" width="300" alt="logo"><img></a>
+        
+        <div> <!-- class="jumbotron" -->
+            <div> <!-- class="container" -->
+                <div class="col-xs-offset-2 col-xs-8">
+                    <div ng-view></div>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+            
+        <div>TimeTracker: v<span app-version></div>
+        <a ng-show="isLoggedIn" href="#/logout">Logout {{whoAmI.firstName}} {{whoAmI.lastName}}</a>
+        <a ng-show="isLoggedIn" href="#/chgpasswd">Change Password</a>
+
+        <!-- In production use:
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+        -->
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="app.js"></script>
+        <script src="components/directives/version-directive.js"></script>
+        <script src="components/services/version.js"></script>
+        <script src="components/services/constants.js"></script>
+        <script src="components/services/employees.js"></script>
+        <script src="components/services/projects.js"></script>
+        <script src="components/services/employees2roles.js"></script>
+        <script src="components/services/projects2employees.js"></script>
+        <script src="components/services/timerecords.js"></script>
+        <script src="components/services/security.js"></script>
+        <script src="modules/home/controller_home.js"></script>
+        <script src="modules/user/controller_user.js"></script>
+        <script src="modules/manager/controller_manager_project.js"></script>
+        <script src="modules/manager/controller_manager_timebooking.js"></script>
+        <script src="modules/admin/controller_admin_employee.js"></script>
+        <script src="modules/admin/controller_admin_project.js"></script>
+    </body>
+</html>

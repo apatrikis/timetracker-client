@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+PRODYNA PAC 2015 - Time Tracker
+Anastasios Patrikis
+-->
+<h1>Employee Administration</h1>
+
+<div class="border">
+    <h2>Employee List</h2>
+    <label>Search: <input type="text" ng-model="searchEmployee" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="employee in allEmployees | filter:searchEmployee | orderBy:'email'">
+                <td>{{employee.email}}</td>
+                <td>
+                    <button ng-click="showEmployee(employee, true)">Show</button>
+                    <button ng-click="showEmployee(employee, false)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selEmployee" class="border">
+    <h2>Selected Employee</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{selEmployee.email}}</td>
+                <td>{{selEmployee.firstName}}</td>
+                <td>{{selEmployee.lastName}}</td>
+                <td>
+                    <form name="updatePasswdFrm">
+                        <input required type="text" ng-model="selEmployee.newPasswd" ng-pattern="/.{4,}/" placeholder="min 4">
+                        <button ng-disabled="isReadOnly || !updatePasswdFrm.$valid" ng-click="resetEmployeePassword()">Reset Password</button>
+                        <button ng-disabled="isReadOnly" ng-click="deleteEmployee()">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selEmployee" class="border">
+    <h2>Employee Roles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="role in selEmployeeRoles">
+                <td>{{role.roleName}}</td>
+                <td>
+                    <button ng-disabled="isReadOnly" ng-click="unassignEmployeeRole(role)">Unassign</button>
+                </td>
+            </tr>
+            <tr ng-repeat="role in availableRoles">
+                <td>{{role}}</td>
+                <td>
+                    <button ng-disabled="isReadOnly" ng-click="assignEmployeeRole(role)">Assign</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selEmployee" class="border">
+    <h2>Projects Member</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="project in selEmployeeProjects | orderBy:'projectId'">
+                <td>{{project.projectId}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selEmployee" class="border">
+    <h2>Projects Manager</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="project in selManagerProjects | orderBy:'projectId'">
+                <td>{{project.projectId}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="border">
+    <h2>New Employee</h2>
+    <form ng-submit="createEmployee()">
+        <label>E-Mail<input required type="text" ng-model="newEmployeeEMail" ng-pattern="/.{5,}/" placeholder="min 5"></label>
+        <label>Password<input required type="text" ng-model="newEmployeePassword" ng-pattern="/.{4,}/" placeholder="min 4"></label><br/>
+        <label>First Name<input required type="text" ng-model="newEmployeeFirstName" ng-pattern="/.{1,}/" placeholder="min 1"></label>
+        <label>Last Name<input required type="text" ng-model="newEmployeeLastName" ng-pattern="/.{1,}/" placeholder="min 1"></label><br/>
+        <label>Role
+            <select multiple="multiple" ng-model="newEmployeeRoles">
+                <option ng-repeat="role in rolesArray">{{role}}</option>
+            </select>
+        </label>
+        <input type="submit" id="submit" value="Create">
+    </form>
+</div>

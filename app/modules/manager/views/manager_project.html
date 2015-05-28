@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+PRODYNA PAC 2015 - Time Tracker
+Anastasios Patrikis
+-->
+<h1>Project Administration</h1>
+
+<div class="border">
+    <h2>Project List</h2>
+    <label>Search: <input type="text" ng-model="searchProject" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="project in allProjects | filter:searchProject | orderBy:'projectId'">
+                <td>{{project.projectId}}</td>
+                <td>{{project.title}}</td>
+                <td>
+                    <button ng-click="showProject(project, true)">Show</button>
+                    <button ng-click="showProject(project, false)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>Selected Project</h2>
+    <form name="updateFrm" ng-submit="updateProject()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Project ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Owner</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Locked</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{selProject.projectId}}</td>
+                    <td><input required ng-disabled="isReadOnly" type="text" ng-model="selProject.title" ng-pattern="/.{5,}/" placeholder="min 5"></td>
+                    <td><input required ng-disabled="isReadOnly" type="text" ng-model="selProject.description" ng-pattern="/.{5,}/" placeholder="min 5"></td>
+                    <td>
+                        {{selProject.owner.email}}
+                        <select ng-disabled="isReadOnly" ng-model="selProject.owner" ng-options="manager.employee as manager.employee.email for manager in allManagers"></select>
+                    </td>
+                    <td><input required type="text" ng-model="selProject.startDatePart" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/"></td>
+                    <td><input required type="text" ng-model="selProject.endDatePart" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/"></td>
+                    <td><input ng-disabled="isReadOnly" type="checkbox" ng-model="selProject.locked"></td>
+                    <td><input ng-disabled="isReadOnly || !updateFrm.$valid" type="submit" value="Update"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>Project Members</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="employee in selProjectEmployees | orderBy:'email'">
+                <td>{{employee.email}}</td>
+                <td>{{employee.firstName}}</td>
+                <td>{{employee.lastName}}</td>
+                <td><button ng-disabled="isReadOnly" ng-click="unassignEmployee(employee)">Unassign</button></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <select ng-disabled="isReadOnly" ng-model="newMember" ng-options="employee as employee.email for employee in allEmployees"></select>
+                    <button ng-disabled="isReadOnly" ng-click="assignEmployee(newMember)">Assign</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

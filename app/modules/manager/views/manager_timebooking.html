@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+PRODYNA PAC 2015 - Time Tracker
+Anastasios Patrikis
+-->
+<h1>Time Booking Administration</h1>
+
+<div class="border">
+    <h2>Project List</h2>
+    <label>Search: <input type="text" ng-model="searchProject" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="project in allProjects | filter:searchProject | orderBy:'projectId'">
+                <td>{{project.projectId}}</td>
+                <td>{{project.title}}</td>
+                <td>
+                    <button ng-click="showProject(project, true)">Show</button>
+                    <button ng-click="showProject(project, false)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>For Approval</h2>
+    <label>Search: <input type="text" ng-model="search" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Project</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Pause</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="booking in allProjectBookings | filter:{$:search, recordStatus:'READY_FOR_APPROVAL'} | orderBy:'startTime'">
+                <td>{{booking.owner.email}}</td>
+                <td>{{booking.project.projectId}}</td>
+                <td>{{booking.startTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{booking.endTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{booking.pauseMinutes}}</td>
+                <td>{{booking.recordStatus}}</td>
+                <td>
+                    <button ng-disabled="isReadOnly" ng-repeat="availableStatus in managerBookingStates" ng-click="setStatus(booking, availableStatus)">{{availableStatus}}</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>Booked</h2>
+    <label>Search: <input type="text" ng-model="search" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Project</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Pause</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="booking in allProjectBookings | filter:{$:search, recordStatus:'BOOKED'} | orderBy:'startTime'">
+                <td>{{booking.owner.email}}</td>
+                <td>{{booking.project.projectId}}</td>
+                <td>{{booking.startTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{booking.endTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{booking.pauseMinutes}}</td>
+                <td>{{booking.recordStatus}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--
+PRODYNA PAC 2015 - Time Tracker
+Anastasios Patrikis
+-->
+<h1>Time Bookings</h1>
+
+<div class="border">
+    <h2>New Booking</h2>
+    <form name="createFrm" ng-submit="createBooking()">
+        <label>Project ID
+            <select required ng-model="newBooking.projectId" ng-options="project as project.projectId for project in selEmployeeProjects"></select>
+        </label>
+        <br/>
+        <label>Start Time<input required type="text" ng-model="newBooking.startDate" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/"></label>
+            T<input required type="text" ng-model="newBooking.startTime" placeholder="09:00" ng-pattern="/^\d{2}[:,.-]\d{2}$/" title="valid delimiters: :,.-">:00
+        <br>
+        <label>End Time<input required type="text" ng-model="newBooking.endDate" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/"></label>
+            T<input required type="text" ng-model="newBooking.endTime" placeholder="17:00" ng-pattern="/^\d{2}[:,.-]\d{2}$/" title="valid delimiters: :,.-">:00
+        <br/>
+        <label>Pause Minutes<input required type="text" ng-model="newBooking.pauseMinutes" placeholder="60" ng-pattern="/^\d{1,3}$/"></label>
+        <br/>
+        <label>Status
+            <select required ng-model="newBooking.recordStatus" ng-options="recordStatus as recordStatus for recordStatus in userBookingStates"></select>
+        </label>
+        <label>Create Bookings:
+            <select required ng-model="newBooking.recordCount" ng-options="pos for pos in newBooking.recordCountArray"></select>
+        </label>
+        <input ng-disabled="!createFrm.$valid" type="submit" id="submit" value="Create">
+    </form>
+</div>
+
+<div class="border">
+    <h2>Open</h2>
+    <label>Search: <input type="text" ng-model="searchOpen" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Project</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Pause Minutes</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="record in allTimeRecords | filter:{$:searchOpen, recordStatus:'!BOOKED'} | orderBy:'startTime'">
+                <td>{{record.project.projectId}}</td>
+                <td>{{record.startTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{record.endTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{record.pauseMinutes}}</td>
+                <td>{{record.recordStatus}}</td>
+                <td>
+                    <button ng-click="setBooking(record)">Edit</button>
+                    <button ng-click="deleteBooking(record)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selBooking" class="border">
+    <h2>Selected Booking</h2>
+    <form name="updateFrm" ng-submit="updateBooking()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Pause Minutes</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select required ng-model="selBooking.project" ng-options="project as project.projectId for project in selEmployeeProjects"></select>
+                    </td>
+                    <td>
+                        <input required type="text" ng-model="selBooking.startDate" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/">
+                        T<input required type="text" ng-model="selBooking.startTime" placeholder="09:00" ng-pattern="/^\d{2}[:,.-]\d{2}$/" title="valid delimiters: :,.-">:00
+                    </td>
+                    <td>
+                        <input required type="text" ng-model="selBooking.endDate" placeholder="2015-03-15" ng-pattern="/^\d{4}-\d{2}-\d{2}$/">
+                        T<input required type="text" ng-model="selBooking.endTime" placeholder="17:00" ng-pattern="/^\d{2}[:,.-]\d{2}$/" title="valid delimiters: :,.-">:00
+                    </td>
+                    <td>
+                        <input required type="text" ng-model="selBooking.pauseMinutes" placeholder="60" ng-pattern="/^\d{1,3}$/"></td>
+                    <td>
+                        <select required ng-model="selBooking.recordStatus" ng-options="recordStatus as recordStatus for recordStatus in userBookingStates"></select>
+                    </td>
+                    <td>
+                        <input ng-disabled="!updateFrm.$valid" type="submit" value="Update">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" ng-show="!updateFrm.$valid">
+                        Error:{{updateFrm.$error}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<div class="border">
+    <h2>Closed</h2>
+    <label>Search: <input type="text" ng-model="searchBooked" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Project</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Pause</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="record in allTimeRecords | filter:{$:searchBooked, recordStatus:'BOOKED'} | orderBy:'startTime'">
+                <td>{{record.owner.email}}</td>
+                <td>{{record.project.projectId}}</td>
+                <td>{{record.startTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{record.endTime | date:'yyyy-MM-dd HH:mm:00 Z'}}</td>
+                <td>{{record.pauseMinutes}}</td>
+                <td>{{record.recordStatus}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

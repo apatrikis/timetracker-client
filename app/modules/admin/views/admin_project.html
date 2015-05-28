@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+PRODYNA PAC 2015 - Time Tracker
+Anastasios Patrikis
+-->
+<h1>Project Administration</h1>
+
+<div class="border">
+    <h2>Project List</h2>
+    <label>Search: <input type="text" ng-model="searchProject" placeholder="any text"></label>
+    <table>
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="project in allProjects | filter:searchProject | orderBy:'projectId'">
+                <td>{{project.projectId}}</td>
+                <td>{{project.title}}</td>
+                <td>{{project.owner.email}}</td>
+                <td>
+                    <button ng-click="showProject(project, true)">Show</button>
+                    <button ng-click="showProject(project, false)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>Selected Project</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Locked</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{selProject.projectId}}</td>
+                <td>{{selProject.title}}</td>
+                <td>{{selProject.description}}</td>
+                <td>{{selProject.owner.email}}</td>
+                <td>{{selProject.startDate}}</td>
+                <td>{{selProject.endDate}}</td>
+                <td>{{selProject.locked}}</td>
+                <td>
+                    <button ng-disabled="isReadOnly" ng-click="deleteProject()">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div ng-if="selProject" class="border">
+    <h2>Project Members</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Member</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="employee in selProjectEmployees | orderBy:'email'">
+                <td>{{employee.email}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="border">
+    <h2>New Project</h2>
+    <form ng-submit="createProject()">
+        <label>Project ID<input required type="text" ng-model="newProjectId" ng-pattern="/.{1,}/" placeholder="min 1"></label>
+        <label>Title<input required type="text" ng-model="newTitle" ng-pattern="/.{5,}/" placeholder="min 5"></label>
+        <label>Description<input required type="text" ng-model="newDescription" ng-pattern="/.{5,}/" placeholder="min 5"><br/></label>
+        <label>Owner
+            <select required ng-model="newOwner" ng-options="manager.employee as manager.employee.email for manager in allManagers"></select>
+        </label>
+        <label>Start Date<input required type="text" ng-model="newStartDate" placeholder="2015-01-31" ng-pattern="/\d{4}-\d{2}-\d{2}/"></label>
+        <label>End Date<input required type="text" ng-model="newEndDate" placeholder="2015-12-31" ng-pattern="/\d{4}-\d{2}-\d{2}/"><br/></label>
+        <label>Locked<input type="checkbox" ng-model="newLocked"></label>
+        <input type="submit" id="submit" value="Create">
+    </form>
+</div>
