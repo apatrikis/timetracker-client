@@ -45,6 +45,10 @@ angular.module('tt', [
             controller: 'HomeController'
         })
         
+        .when('/logout', {
+            templateUrl: 'modules/home/views/logout.html'
+        })
+        
         .when('/USER', {
             templateUrl: 'modules/user/views/user.html',
             controller: 'UserController'
