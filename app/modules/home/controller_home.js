@@ -9,14 +9,14 @@ angular.module('Home', ['ngRoute',
     'tt.services.security'])
  
 .controller('HomeController',
-    ['$rootScope', '$scope', '$http', '$location', 'Security', 'ChangePassword', 'ConstantsRoles',
-    function ($rootScope, $scope, $http, $location, Security, ChangePassword, ConstantsRoles) {
+    ['$rootScope', '$scope', '$http', '$location', 'Security', 'ChangePassword', 'ConstantsRoles', 'BaseURL',
+    function ($rootScope, $scope, $http, $location, Security, ChangePassword, ConstantsRoles, BaseURL) {
         $scope.rolesArray = ConstantsRoles;
         
         $scope.login = function (asType) {
             $scope.dataLoading = true;
             
-            $http.post('http://localhost:8080/timetracker-server/rest/security/' + asType)
+            $http.post(BaseURL + '/security/' + asType)
                 .success(function () {
                     $scope.error = '';
                     $scope.dataLoading = false;

@@ -4,22 +4,24 @@
  */
 'use strict';
 
-angular.module('tt.services.security', ['ngResource'])
+angular.module('tt.services.security', [
+    'ngResource',
+    'tt.services.constants'])
 
-.factory('ResetPassword', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/security/reset', {}, {
+.factory('ResetPassword', function($resource, BaseURL){
+    return $resource(BaseURL + '/security/reset', {}, {
         resetPasswd:{method:'POST'}
     });
 })
 
-.factory('ChangePassword', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/security/change', {}, {
+.factory('ChangePassword', function($resource, BaseURL){
+    return $resource(BaseURL + '/security/change', {}, {
         changePasswd:{method:'POST'}
     });
 })
 
-.factory('Security', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/security', {}, {
+.factory('Security', function($resource, BaseURL){
+    return $resource(BaseURL + '/security', {}, {
         whoAmI:{method:'GET'}
     });
 })

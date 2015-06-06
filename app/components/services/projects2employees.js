@@ -4,30 +4,32 @@
  */
 'use strict';
 
-angular.module('tt.services.projects2employees', ['ngResource'])
+angular.module('tt.services.projects2employees', [
+    'ngResource',
+    'tt.services.constants'])
 
-.factory('EmployeeProjects', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/p2e/employees/:email/projects', {email:'@email'}, {
+.factory('EmployeeProjects', function($resource, BaseURL){
+    return $resource(BaseURL + '/p2e/employees/:email/projects', {email:'@email'}, {
         readAllProjetcs:{method:'GET', isArray:true},
         assignProject:{method:'POST'}
     });
 })
 
-.factory('EmployeeUnassignProject', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/p2e/employees/:email/projects/:projectId', {projectId:'@projectId', email:'@email'}, {
+.factory('EmployeeUnassignProject', function($resource, BaseURL){
+    return $resource(BaseURL + '/p2e/employees/:email/projects/:projectId', {projectId:'@projectId', email:'@email'}, {
         unassignProject:{method:'DELETE'}
     });
 })
 
-.factory('ProjectEmployees', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/p2e/projects/:projectId/employees', {projectId:'@projectId'}, {
+.factory('ProjectEmployees', function($resource, BaseURL){
+    return $resource(BaseURL + '/p2e/projects/:projectId/employees', {projectId:'@projectId'}, {
         readAllEmployees:{method:'GET', isArray:true},
         assignEmployee:{method:'POST'}
     });
 })
 
-.factory('ProjectUnassignEmployee', function($resource){
-    return $resource('http://localhost:8080/timetracker-server/rest/p2e/projects/:projectId/employees/:email', {projectId:'@projectId', email:'@email'}, {
+.factory('ProjectUnassignEmployee', function($resource, BaseURL){
+    return $resource(BaseURL + '/p2e/projects/:projectId/employees/:email', {projectId:'@projectId', email:'@email'}, {
         unassignEmployee:{method:'DELETE'}
     });
 })
