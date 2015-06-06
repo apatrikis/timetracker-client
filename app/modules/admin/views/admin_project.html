@@ -52,8 +52,8 @@ Anastasios Patrikis
                 <td>{{selProject.title}}</td>
                 <td>{{selProject.description}}</td>
                 <td>{{selProject.owner.email}}</td>
-                <td>{{selProject.startDate}}</td>
-                <td>{{selProject.endDate}}</td>
+                <td>{{selProject.startDate | date:'yyyy-MM-dd'}}</td>
+                <td>{{selProject.endDate | date:'yyyy-MM-dd'}}</td>
                 <td>{{selProject.locked}}</td>
                 <td>
                     <button ng-disabled="isReadOnly" ng-click="deleteProject()">Delete</button>
