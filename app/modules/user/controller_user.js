@@ -56,7 +56,7 @@ angular.module('User', ['ngRoute',
         $scope.updateBooking = function() {
             $scope.editBooking.project = $scope.selBooking.project;
             $scope.editBooking.startTime = new Date($scope.selBooking.startDate + "T" + $scope.selBooking.startTime.replace(/[,.-]/, ":") + ":00");
-            $scope.editBooking.endTime = new Date($scope.selBooking.startDate + "T" + $scope.selBooking.startTime.replace(/[,.-]/, ":") + ":00");
+            $scope.editBooking.endTime = new Date($scope.selBooking.endDate + "T" + $scope.selBooking.endTime.replace(/[,.-]/, ":") + ":00");
             $scope.editBooking.pauseMinutes = $scope.selBooking.pauseMinutes;
             $scope.editBooking.recordStatus = $scope.selBooking.recordStatus;
             
