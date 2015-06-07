@@ -1,3 +1,4 @@
 /app/bower_components/
 /app/modules/_experimental/
 /app/modules/_sample/
+/target/

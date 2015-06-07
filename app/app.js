@@ -11,7 +11,7 @@ angular.module('AdminEmployee', []);
 angular.module('AdminProject', []);
 
 // Declare app level module which depends on views, and components
-angular.module('tt', [
+var ttApp = angular.module('tt', [
     'tt.version',
     'tt.version.version-directive',
     'tt.services.constants',
@@ -29,9 +29,10 @@ angular.module('tt', [
     'Admin',
     'AdminEmployee',
     'AdminProject',
-    'ngRoute'])
+    'ngRoute',
+    'angularBasicAuth']);
 
-.config(['$routeProvider',
+ttApp.config(['$routeProvider',
     function($routeProvider) {
 
     $routeProvider
@@ -46,7 +47,8 @@ angular.module('tt', [
         })
         
         .when('/logout', {
-            templateUrl: 'modules/home/views/logout.html'
+            templateUrl: 'modules/home/views/logout.html',
+            controller: 'HomeController'
         })
         
         .when('/USER', {

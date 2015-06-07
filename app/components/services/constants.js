@@ -6,7 +6,7 @@
 
 angular.module('tt.services.constants', [])
 
-.constant('BaseURL', 'http://localhost:8080/timetracker-server/rest')
+.constant('BaseURL', window.location.protocol + '//localhost:' + window.location.port + '/timetracker-server/rest')
 
 .constant('ConstantsRoles', ['USER', 'MANAGER', 'ADMIN'])
 
