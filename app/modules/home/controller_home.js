@@ -6,13 +6,12 @@
  
 angular.module('Home', ['ngRoute',
     'tt.services.constants',
-    'tt.services.security'])
+    'tt.services.security',
+    'tt.services.employees2roles'])
  
 .controller('HomeController',
-    ['$rootScope', '$scope', '$http', '$location', 'authDefaults','authService', 'Security', 'ChangePassword', 'ConstantsRoles', 'BaseURL',
-    function ($rootScope, $scope, $http, $location, authDefaults, authService, Security, ChangePassword, ConstantsRoles, BaseURL) {
-        $scope.rolesArray = ConstantsRoles;
-        
+    ['$rootScope', '$scope', '$location', 'authDefaults','authService', 'Security', 'ChangePassword', 'ConstantsRoles', 'BaseURL', 'EmployeeRolesFindByEmployee',
+    function ($rootScope, $scope, $location, authDefaults, authService, Security, ChangePassword, ConstantsRoles, BaseURL, EmployeeRolesFindByEmployee) {
         // the current hostname
         authService.addEndpoint();
         
@@ -26,36 +25,36 @@ angular.module('Home', ['ngRoute',
             $scope.loggedInUsername = null;
         });
 
-        $scope.loginButton = function (asType) {
+        $scope.loginButton = function() {
             $scope.dataLoading = true;
             
-            if($rootScope.isLoggedIn === true) {
-                $location.path('/' + asType);
-            } else {
-                // define the endpoints that will be authenticated
-                authDefaults.authenticateUrl = BaseURL + '/security/' + asType;
-                authService.login($scope.loginEmail, $scope.loginPassword)
-                    .success(function() {
-                        $scope.error = '';
-                        $scope.dataLoading = false;
+            // define the endpoints that will be authenticated
+            authDefaults.authenticateUrl = BaseURL + '/security';
+            authService.login($scope.loginEmail, $scope.loginPassword)
+                .success(function() {
+                    $scope.error = '';
+                    $scope.dataLoading = false;
 
-                        $rootScope.whoAmI = Security.whoAmI({}, function() {
-                            $rootScope.isLoggedIn = true;
-                            $location.path('/' + asType);
-                        });
-                    })
-                    .error(function() {
-                        $scope.error = 'Login was not successful';
-                        $scope.dataLoading = false;
+                    $rootScope.whoAmI = Security.whoAmI({}, function() {
+                        $rootScope.isLoggedIn = true;
+                        var employeeRoles = EmployeeRolesFindByEmployee.findByEmployee({email:$rootScope.whoAmI.email},
+                        function() {
+                            $rootScope.whoAmI.employeeRoles = employeeRoles;
+                        },
+                        errorHandler);
                     });
-                }
+                })
+                .error(function() {
+                    $scope.error = 'Login was not successful';
+                    $scope.dataLoading = false;
+                });
         };
         
         $scope.logoutButton = function() {
             $rootScope.isLoggedIn = false;
             $rootScope.whoAmI = null;
             $location.path('/');
-        }
+        };
         
         $scope.changePassword = function() {
             ChangePassword.changePasswd({email:$rootScope.whoAmI.email,
