@@ -30,7 +30,8 @@ var ttApp = angular.module('tt', [
     'AdminEmployee',
     'AdminProject',
     'ngRoute',
-    'angularBasicAuth']);
+    'angularBasicAuth',
+    'ngWebsocket']);
 
 ttApp.config(['$routeProvider',
     function($routeProvider) {
@@ -90,3 +91,32 @@ ttApp.config(['$routeProvider',
         // use the HTML5 History API
 //        $locationProvider.html5Mode(true);
 }]);
+
+ttApp.run(function ($websocket, $rootScope) {
+    var whichURL = 'wss://localhost:8181/timetracker-server/messages';
+    if(window.location.protocol === 'http:') {
+        whichURL = 'ws://localhost:8080/timetracker-server/messages';
+    }
+    
+    var ws = $websocket.$new({
+        url: whichURL,
+        lazy: true,
+        reconnect: true
+    });
+    
+    ws.$on('$open', function () {
+        ws.$emit($rootScope.whoAmI.email, 'register');
+            $rootScope.websocketMessage = "websocket opened";
+        })
+        .$on('servermessage', function (data) {
+            console.log('The websocket server has sent the following data:');
+            console.log(data);
+            $rootScope.websocketMessage = data;
+        })
+        .$on('$close', function () {
+            console.log('closing websocket');
+            $rootScope.websocketMessage = "websocket closed";
+        });
+        
+    $rootScope.websocket = ws;
+});

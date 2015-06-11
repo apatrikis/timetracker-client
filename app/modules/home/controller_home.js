@@ -10,8 +10,8 @@ angular.module('Home', ['ngRoute',
     'tt.services.employees2roles'])
  
 .controller('HomeController',
-    ['$rootScope', '$scope', '$location', 'authDefaults','authService', 'Security', 'ChangePassword', 'ConstantsRoles', 'BaseURL', 'EmployeeRolesFindByEmployee',
-    function ($rootScope, $scope, $location, authDefaults, authService, Security, ChangePassword, ConstantsRoles, BaseURL, EmployeeRolesFindByEmployee) {
+    ['$rootScope', '$scope', '$location', 'authDefaults','authService', 'Security', 'ChangePassword', 'BaseURL', 'EmployeeRolesFindByEmployee',
+    function ($rootScope, $scope, $location, authDefaults, authService, Security, ChangePassword, BaseURL, EmployeeRolesFindByEmployee) {
         // the current hostname
         authService.addEndpoint();
         
@@ -42,6 +42,8 @@ angular.module('Home', ['ngRoute',
                             $rootScope.whoAmI.employeeRoles = employeeRoles;
                         },
                         errorHandler);
+                        
+                        $rootScope.websocket.$open();
                     });
                 })
                 .error(function() {
@@ -51,6 +53,8 @@ angular.module('Home', ['ngRoute',
         };
         
         $scope.logoutButton = function() {
+            $rootScope.websocket.$close();
+            
             $rootScope.isLoggedIn = false;
             $rootScope.whoAmI = null;
             $location.path('/');
