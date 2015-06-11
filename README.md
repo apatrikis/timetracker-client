@@ -194,6 +194,15 @@ JkRequestLogFormat "%w %V %T"
 </VirtualHost>
 ```
 
+For enabling `WebSocket` communcation to the server the following line must be enabled:
+```
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+```
+
+<<
+TODO : there is more configuration required
+http://notmyitblog.blogspot.de/2014/03/websockets-support-for-apache-httpd.html
+>>
 
 After the configuration changes, the files should be tested for before using them.
 ```
@@ -210,6 +219,8 @@ https://localhost/angular/
 The server side database setup included the creation of an adminstration account (the default is `ad.min@tt.com` with `secret`). The login to `BASIC Authentication` uses this credential.
 
 
-# Educational links about Javascrip
+# Educational links about Javascrip and WebSockets
 - http://stackoverflow.com/questions/359494/does-it-matter-which-equals-operator-vs-i-use-in-javascript-comparisons
 - http://dorey.github.io/JavaScript-Equality-Table/
+- http://dreamand.me/java/jee7-websocket-example/
+- https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
