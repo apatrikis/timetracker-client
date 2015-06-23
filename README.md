@@ -174,6 +174,16 @@ JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
 JkRequestLogFormat "%w %V %T"
 ```
 
+- additionally, enable modules for `WebSocket` support in `httpd.conf`
+
+```
+LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+LoadModule slotmem_shm_module modules/mod_slotmem_shm.so
+```
+
 - add the `Apache Tomcat Connector` settings to `VirtualHost` configurations for HTTP (even it has to be disabled as described above) and HTTPS
 
 - in `<<pathTo>>/Apache24/conf/extra/httpd-vhosts.conf`
@@ -182,6 +192,12 @@ JkRequestLogFormat "%w %V %T"
 <VirtualHost _default_:80>
   ...
   JkMount /timetracker-server/* balancer
+  
+  <Proxy balancer://mycluster>
+    BalancerMember ws://localhost:28080
+    BalancerMember ws://localhost:28081
+  </Proxy>
+  ProxyPass /timetracker-server/messages balancer://mycluster/timetracker-server/messages
 </VirtualHost>
 ```
 
@@ -191,6 +207,13 @@ JkRequestLogFormat "%w %V %T"
 <VirtualHost _default_:443>
   ...
   JkMount /timetracker-server/* balancer
+  
+  SSLProxyEngine on
+  <Proxy balancer://mycluster>
+    BalancerMember wss://localhost:28181
+    BalancerMember wss://localhost:28182
+  </Proxy>
+  ProxyPass /timetracker-server/messages balancer://mycluster/timetracker-server/messages
 </VirtualHost>
 ```
 
@@ -224,3 +247,4 @@ The server side database setup included the creation of an adminstration account
 - http://dorey.github.io/JavaScript-Equality-Table/
 - http://dreamand.me/java/jee7-websocket-example/
 - https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+- http://blog.arungupta.me/load-balance-websockets-apache-httpd-techtip48/

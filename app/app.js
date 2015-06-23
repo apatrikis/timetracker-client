@@ -93,9 +93,9 @@ ttApp.config(['$routeProvider',
 }]);
 
 ttApp.run(function ($websocket, $rootScope) {
-    var whichURL = 'wss://localhost:8181/timetracker-server/messages';
+    var whichURL = 'wss://localhost/timetracker-server/messages';
     if(window.location.protocol === 'http:') {
-        whichURL = 'ws://localhost:8080/timetracker-server/messages';
+        whichURL = 'ws://localhost/timetracker-server/messages';
     }
     
     var ws = $websocket.$new({
@@ -105,13 +105,13 @@ ttApp.run(function ($websocket, $rootScope) {
     });
     
     ws.$on('$open', function () {
-        ws.$emit($rootScope.whoAmI.email, 'register');
+        ws.$emit($rootScope.whoAmI.email, {timestamp: new Date().toJSON(), message:"register"});
             $rootScope.websocketMessage = "websocket opened";
         })
         .$on('servermessage', function (data) {
             console.log('The websocket server has sent the following data:');
             console.log(data);
-            $rootScope.websocketMessage = data;
+            $rootScope.websocketMessage = "Timestamp: [" + data.timestamp + "], Message: " + data.message;
         })
         .$on('$close', function () {
             console.log('closing websocket');
